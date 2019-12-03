@@ -60,16 +60,10 @@ module "aws_instance_hashicat" {
   associate_public_ip_address = true
 }
 
-resource "random_id" "app-server-id" {
-  count       = "${var.vm_count}"
-  prefix      = "${var.prefix}-hashicat-"
-  byte_length = 8
-}
-
 module "aws_record_hashicat" {
   source        = "app.terraform.io/re-Invent/route53-records/aws"
   zone_id       = "${data.terraform_remote_state.base_layer.dns_zone_id[0]}"
-  instance_name = ["${random_id.app-server-id.hex}"]
+  instance_name = "${random_id.app-server-id.hex}"
   instance_ip   = ["${module.aws_instance_hashicat.instance_public_ip}"]
   record_type   = "A"
   record_ttl    = "300"
