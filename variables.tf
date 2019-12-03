@@ -11,3 +11,9 @@ variable "vm_count" {
   type        = "string"
   default     = "1"
 }
+
+variable "ssh_public_key" {
+  description = "Should be true if you wanted to deploy internet gateway"
+  type        = "string"
+  default     = ""
+}

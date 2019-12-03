@@ -1,7 +1,7 @@
 module "aws_key_pair" {
   source     = "app.terraform.io/re-Invent/keypair/aws"
   key_name   = "reinvent-2019-key"
-  public_key = "ssh-rsa ..."
+  public_key = "${var.ssh_public_key}"
 }
 
 module "aws_sg_hashicat" {
