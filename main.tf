@@ -8,7 +8,7 @@ module "aws_sg_hashicat" {
   source      = "app.terraform.io/re-Invent/securitygroup/aws"
   name        = "rhforum_sg_vault"
   description = "Used by Vault Server"
-  vpc_id      = "${data.base_layer.outputs.vpc_id}"
+  vpc_id      = "${data.terraform_remote_state.base_layer.outputs.vpc_id}"
 
   custom_security_rules = [{
     "type"        = "egress"
@@ -55,7 +55,7 @@ module "aws_instance_hashicat" {
 
   vm_count                    = "1"
   vpc_security_group_ids      = ["${module.aws_sg_hashicat.sg_id}"]
-  subnet_id                   = "${data.base_layer.outputs.public_subnets[0]}"
+  subnet_id                   = "${data.terraform_remote_state.base_layer.outputs.public_subnets[0]}"
   key_name                    = "${module.aws_key_pair.key_name}"
   associate_public_ip_address = true
 }
@@ -68,7 +68,7 @@ resource "random_id" "app-server-id" {
 
 module "aws_record_hashicat" {
   source        = "app.terraform.io/re-Invent/route53-records/aws"
-  zone_id       = "${data.base_layer.outputs.dns_zone_id}"
+  zone_id       = "${data.terraform_remote_state.base_layer.outputs.dns_zone_id}"
   instance_name = ["${random_id.app-server-id.*.hex}}"]
   instance_ip   = ["${module.aws_instance_hashicat.instance_public_ip}"]
   record_type   = "A"
