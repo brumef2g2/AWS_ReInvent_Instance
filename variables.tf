@@ -17,3 +17,21 @@ variable "ssh_public_key" {
   type        = "string"
   default     = ""
 }
+
+variable "placeholder" {
+  description = "Should be true if you wanted to deploy internet gateway"
+  type        = "string"
+  default     = "placekitten.com"
+}
+
+variable "width" {
+  description = "Should be true if you wanted to deploy internet gateway"
+  type        = "string"
+  default     = "600"
+}
+
+variable "height" {
+  description = "Should be true if you wanted to deploy internet gateway"
+  type        = "string"
+  default     = "400"
+}
