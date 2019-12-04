@@ -1,7 +1,11 @@
+resource "tls_private_key" "hashicat" {
+  algorithm = "RSA"
+}
+
 module "aws_key_pair" {
   source     = "app.terraform.io/re-Invent/keypair/aws"
-  key_name   = "reinvent-2019-key"
-  public_key = "${var.ssh_public_key}"
+  key_name   = "reinvent-2019-hashicat-key"
+  public_key = "${tls_private_key.hashicat.public_key_openssh}"
 }
 
 module "aws_sg_hashicat" {
@@ -67,4 +71,43 @@ module "aws_record_hashicat" {
   instance_ip   = ["${module.aws_instance_hashicat.instance_public_ip}"]
   record_type   = "A"
   record_ttl    = "300"
+}
+
+resource "null_resource" "configure-cat-app" {
+  depends_on = [
+    "aws_instance_hashicat",
+  ]
+
+  triggers = {
+    build_number = "${timestamp()}"
+  }
+
+  provisioner "file" {
+    source      = "files/"
+    destination = "/home/ubuntu/"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = "${tls_private_key.hashicat.private_key_pem}"
+      host        = "${module.aws_instance_hashicat.instance_public_ip}"
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt -y install apache2",
+      "sudo systemctl start apache2",
+      "sudo chown -R ubuntu:ubuntu /var/www/html",
+      "chmod +x *.sh",
+      "PLACEHOLDER=${var.placeholder} WIDTH=${var.width} HEIGHT=${var.height} PREFIX=${var.prefix} ./deploy_app.sh",
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = "${tls_private_key.hashicat.private_key_pem}"
+      host        = "${module.aws_instance_hashicat.instance_public_i}"
+    }
+  }
 }
