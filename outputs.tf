@@ -1,3 +1,3 @@
 output "catapp_url" {
-  value = ["http://${module.aws_record_hashicat.record_fqdn}"]
+  value = "http://${join(",",module.aws_record_hashicat.record_fqdn)}"
 } 
