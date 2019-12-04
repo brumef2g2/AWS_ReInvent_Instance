@@ -107,7 +107,7 @@ resource "null_resource" "configure-cat-app" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = "${tls_private_key.hashicat.private_key_pem}"
-      host        = "${module.aws_instance_hashicat.instance_public_i}"
+      host        = "${module.aws_instance_hashicat.instance_public_ip}"
     }
   }
 }
