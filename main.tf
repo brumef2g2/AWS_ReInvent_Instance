@@ -75,7 +75,7 @@ module "aws_record_hashicat" {
 
 resource "null_resource" "configure-cat-app" {
   depends_on = [
-    "module.aws_instance_hashicat.instance_public_ip",
+    "module.aws_instance_hashicat",
   ]
 
   triggers = {
