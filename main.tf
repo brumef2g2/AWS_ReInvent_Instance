@@ -64,7 +64,6 @@ module "aws_instance_hashicat" {
   subnet_id                   = "${data.terraform_remote_state.base_layer.public_subnets[0]}"
   key_name                    = "${module.aws_key_pair.key_name}"
   associate_public_ip_address = true
-  instance_type               = "${var.instance_type}"
 }
 
 module "aws_record_hashicat" {
